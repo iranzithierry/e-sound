@@ -1,0 +1,84 @@
+<!-- IRANZI Thierry Author -->
+<!-- IRANZI Thierry Author -->
+<!-- IRANZI Thierry Author -->
+<!-- IRANZI Thierry Author -->
+<!-- IRANZI Thierry Author -->
+<!-- IRANZI Thierry Author -->
+<!-- IRANZI Thierry Author -->
+<!-- IRANZI Thierry Author -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E4G5BMXPJL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-E4G5BMXPJL');
+    </script>
+    <title>More AI</title>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a class="title" href="/">
+                <img src="static/favicon.png" alt="" srcset="">
+            </a>
+            <div class="del-icon" title="Delete Chat">
+                <span>Delete Chat</span>
+                <i class='bx bxs-trash-alt'></i>
+            </div>
+        </header>
+        <div class="chat-box">
+            <div class="welcome-msg">
+                <h1>Welcome To More Chatbot</h1>
+                <div class="columns">
+                    <ul class="col-1">
+                        <h2>What Ican</h2>
+                        <li>As Spotify</li>
+                        <li>Answer All Your Questions</li>
+                        <li>As Transalator</li>
+                        <li>As Teacher</li>
+                        <li>As Doctor</li>
+                    </ul>
+                    <ul class="col-2">
+                        <h2>Examples</h2>
+                        <li class="example-point">Play Song Away By Ariel Ways</li>
+                        <li class="example-point">What Is Photosyntesis</li>
+                        <li class="example-point">How To Say Morning In French</li>
+                        <li class="example-point">How To Solve Trigonometry</li>
+                        <li class="example-point">How To Treat Skin Lashes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="indicator">
+            <span>Listening &nbsp;</span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        <form method="POST">
+            <input type="text" name="user_input" placeholder="Enter your message" class="user-input">
+            <button type="submit" class="send-btn"><i class='bx bxs-send'></i></button>
+            <button class="microphone"><i class='bx bx-microphone'></i></button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
