@@ -120,7 +120,7 @@ def process():
 
     else:
         openai_form = (
-            user_input.lower()
+            user_input
             .strip()
             .replace("coding rwanda", "OpenAI")
             .replace("2023", "2015")
