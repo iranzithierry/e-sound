@@ -18,9 +18,9 @@ app = Flask(__name__)
 openai.api_key = "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"
 
 # Greet and play songs responses
-greetings = ["ayoo", "hii", "hi", "amakuru", "hello", "waguan"]
+greetings = ["ayoo ", "hii ", "hi ", "amakuru ", "hello ", "waguan "]
 greet_responses = ["Hello!", "Hi there!", "Hey!", "Greetings!", "Good day to you!"]
-play_song_phrases = ["play song", "download for me", "play this", "download this","play sing","plat song"]
+play_song_phrases = ["play song ", "download for me ", "play this ", "download this ","play sing ","plat song ","play any song ","play any song of ","can you play me a song","play me a song"]
 
 
 # Function to generate AI response
