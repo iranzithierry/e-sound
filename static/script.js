@@ -362,7 +362,7 @@ function writingCode(codes, codeElement) {
 function loadDataFromLocalstorage() {
   if (localStorage.getItem("chats-06")) {
     welcomeMsg.classList.remove("remove");
-    chatbox.innerHTML = localStorage.getItem("all-chats");
+    chatbox.innerHTML = localStorage.getItem("chats-06");
   }
 }
 
