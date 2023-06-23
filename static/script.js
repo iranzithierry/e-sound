@@ -221,7 +221,7 @@ function createMusicContainer(songName) {
     plyrButtons.appendChild(downloadBtn);
     downloadBtn.appendChild(downloadLink);
     downloadLink.append(downloadIcon);
-  }, 2000);
+  }, 3000);
 
   const songNameP = document.createElement("p");
   let nameOfTheSong = songName.replace("static/songs/", "");
@@ -230,7 +230,7 @@ function createMusicContainer(songName) {
  setTimeout(() => {
   songNameP.innerHTML = "";
   songNameP.innerHTML = nameOfTheSong;
- }, 6000);
+ }, 3000);
 
   appendChildren(audio, [source]);
   appendChildren(container, [audio, songNameP]);
