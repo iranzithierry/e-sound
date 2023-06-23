@@ -221,18 +221,30 @@ function createMusicContainer(songName, playerId) {
     const playerControls = document.querySelector(`#player-${playerId}`).parentNode.querySelector('.plyr__controls');
     playerControls.appendChild(downloadBtn);
     downloadBtn.appendChild(downloadLink);
+<<<<<<< HEAD
     downloadLink.appendChild(downloadIcon);
   }, 3000);
 
+=======
+    downloadLink.append(downloadIcon);
+  }, 3000);
+>>>>>>> 6dd7f870a3363915f18ec3948f1ad97fcea25835
 
   const songNameP = document.createElement("p");
   let nameOfTheSong = songName.replace("static/songs/", "");
 
   songNameP.innerHTML = "This Song Will Be Expired After 2 Hours \n Download It For Better Performance ✌️😁";
+<<<<<<< HEAD
   setTimeout(() => {
     songNameP.innerHTML = "";
     songNameP.innerHTML = nameOfTheSong;
   }, 3000);
+=======
+ setTimeout(() => {
+  songNameP.innerHTML = "";
+  songNameP.innerHTML = nameOfTheSong;
+ }, 3000);
+>>>>>>> 6dd7f870a3363915f18ec3948f1ad97fcea25835
 
   appendChildren(audio, [source]);
   appendChildren(container, [audio, songNameP]);
