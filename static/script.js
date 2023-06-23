@@ -85,19 +85,20 @@ function handleSubmit(e) {
         // Process the response received from the server
         if (data.response && data.response.includes("song++")) {
           // If the response is a song, create and append a music container
-          const musicContainer = createMusicContainer(data.response.replace("song++", ""));
+          const playerId = Math.floor(Math.random() * 100000); // Generate a random ID
+          const musicContainer = createMusicContainer(data.response.replace("song++", ""), playerId);
           dotMessage.remove();
           setTimeout(() => {
             const chatMessages = Array.from(chatbox.children).filter((child) => {
               return !child.querySelector("pre");
             });
-
+        
             const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
-            localStorage.setItem("all-chats", chatHistory);
+            localStorage.setItem("chats-06", chatHistory);
           }, 10000);
           chatbox.appendChild(musicContainer);
-          plyr.setup("#player");
-        } else if (data.response) {
+          plyr.setup(`#player-${playerId}`);
+        }else if (data.response) {
           // If the response is a text message, create and append a bot message container
           const botMessageContainer = createBotMessageContainer();
           const botMsg = createDivWithClass("bot-msg");
@@ -118,7 +119,7 @@ function handleSubmit(e) {
             });
 
             const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
-            localStorage.setItem("all-chats", chatHistory);
+            localStorage.setItem("chats-06", chatHistory);
           }, 10000);
         }
       } else if (xhr.status === 500) {
@@ -197,13 +198,13 @@ function createDotMessage() {
 }
 
 // Utility function to create a music container element
-function createMusicContainer(songName) {
+function createMusicContainer(songName, playerId) {
   const container = document.createElement("div");
   container.setAttribute("id", "container");
 
   const audio = document.createElement("audio");
   audio.setAttribute("controls", "");
-  audio.setAttribute("id", "player");
+  audio.setAttribute("id", `player-${playerId}`);
 
   const source = document.createElement("source");
   source.setAttribute("src", songName);
@@ -217,20 +218,21 @@ function createMusicContainer(songName) {
   const downloadIcon = document.createElement("i");
   downloadIcon.classList.add("bx", "bxs-download");
   setTimeout(() => {
-    const plyrButtons = document.querySelector(".plyr__controls");
-    plyrButtons.appendChild(downloadBtn);
+    const playerControls = document.querySelector(`#player-${playerId}`).parentNode.querySelector('.plyr__controls');
+    playerControls.appendChild(downloadBtn);
     downloadBtn.appendChild(downloadLink);
-    downloadLink.append(downloadIcon);
-  }, 2000);
+    downloadLink.appendChild(downloadIcon);
+  }, 3000);
+
 
   const songNameP = document.createElement("p");
   let nameOfTheSong = songName.replace("static/songs/", "");
- 
+
   songNameP.innerHTML = "This Song Will Be Expired After 2 Hours \n Download It For Better Performance ✌️😁";
- setTimeout(() => {
-  songNameP.innerHTML = "";
-  songNameP.innerHTML = nameOfTheSong;
- }, 6000);
+  setTimeout(() => {
+    songNameP.innerHTML = "";
+    songNameP.innerHTML = nameOfTheSong;
+  }, 3000);
 
   appendChildren(audio, [source]);
   appendChildren(container, [audio, songNameP]);
@@ -360,15 +362,23 @@ function writingCode(codes, codeElement) {
 
 // Function to load chat history from local storage
 function loadDataFromLocalstorage() {
-  if (localStorage.getItem("all-chats")) {
+  if (localStorage.getItem("chats-06")) {
     welcomeMsg.classList.remove("remove");
-    chatbox.innerHTML = localStorage.getItem("all-chats");
+    chatbox.innerHTML = localStorage.getItem("chats-06");
   }
 }
 
 // Call the function to load chat history from local storage
 loadDataFromLocalstorage();
 delIcon.addEventListener("click", () => {
-  localStorage.removeItem("all-chats"); // Remove
+  localStorage.removeItem("chats-06"); // Remove
   window.location.reload(); // Reload
+});
+
+window.addEventListener("beforeunload", function (event) {
+  // Cancel the event to prevent the browser's default confirmation dialog
+  event.preventDefault();
+  // Display a custom alert
+  event.returnValue = ""; 
+  alert("Was Greatness Meeting You?");
 });
