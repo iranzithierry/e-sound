@@ -13,10 +13,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- highlighter css -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <!-- highlighter js -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-E4G5BMXPJL"></script>
@@ -78,7 +83,9 @@
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-
+    <link rel="stylesheet" href="https://cdn.plyr.io/2.0.15/plyr.css" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='player.css') }}">
+    <script src="https://cdn.plyr.io/2.0.15/plyr.js"></script>
 </body>
 
 </html>

@@ -85,23 +85,18 @@ function handleSubmit(e) {
         // Process the response received from the server
         if (data.response && data.response.includes("song++")) {
           // If the response is a song, create and append a music container
-          const musicContainer = createMusicContainer(
-            data.response.replace("song++", "")
-          );
+          const musicContainer = createMusicContainer(data.response.replace("song++", ""));
           dotMessage.remove();
           setTimeout(() => {
-            const chatMessages = Array.from(chatbox.children).filter(
-              (child) => {
-                return !child.querySelector("pre");
-              }
-            );
+            const chatMessages = Array.from(chatbox.children).filter((child) => {
+              return !child.querySelector("pre");
+            });
 
-            const chatHistory = chatMessages
-              .map((message) => message.outerHTML)
-              .join("");
+            const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
             localStorage.setItem("all-chats", chatHistory);
           }, 10000);
           chatbox.appendChild(musicContainer);
+          plyr.setup("#player");
         } else if (data.response) {
           // If the response is a text message, create and append a bot message container
           const botMessageContainer = createBotMessageContainer();
@@ -118,15 +113,11 @@ function handleSubmit(e) {
 
           // Store all chats in the local storage after a delay of 10 seconds
           setTimeout(() => {
-            const chatMessages = Array.from(chatbox.children).filter(
-              (child) => {
-                return !child.querySelector("pre");
-              }
-            );
+            const chatMessages = Array.from(chatbox.children).filter((child) => {
+              return !child.querySelector("pre");
+            });
 
-            const chatHistory = chatMessages
-              .map((message) => message.outerHTML)
-              .join("");
+            const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
             localStorage.setItem("all-chats", chatHistory);
           }, 10000);
         }
@@ -134,8 +125,7 @@ function handleSubmit(e) {
         // Handle internal server error
         const errorMsg = document.createElement("div");
         errorMsg.className = "error-msg";
-        errorMsg.innerHTML =
-          "An Error Occured while trying to connect to the server";
+        errorMsg.innerHTML = "An Error Occured while trying to connect to the server";
         chatbox.appendChild(errorMsg);
         xhr.abort();
         dotMessage.remove();
@@ -208,20 +198,44 @@ function createDotMessage() {
 
 // Utility function to create a music container element
 function createMusicContainer(songName) {
+  const container = document.createElement("div");
+  container.setAttribute("id", "container");
+
   const audio = document.createElement("audio");
   audio.setAttribute("controls", "");
+  audio.setAttribute("id", "player");
+
   const source = document.createElement("source");
   source.setAttribute("src", songName);
-  source.setAttribute("type", "audio/mp3");
-  const musicContainer = createDivWithClass("music-container");
+  source.setAttribute("type", "video/mp4");
+
+  const downloadBtn = document.createElement("button");
+  const downloadLink = document.createElement("a");
+  downloadLink.setAttribute("href", songName);
+  downloadLink.setAttribute("download", "");
+
+  const downloadIcon = document.createElement("i");
+  downloadIcon.classList.add("bx", "bxs-download");
+  setTimeout(() => {
+    const plyrButtons = document.querySelector(".plyr__controls");
+    plyrButtons.appendChild(downloadBtn);
+    downloadBtn.appendChild(downloadLink);
+    downloadLink.append(downloadIcon);
+  }, 2000);
+
   const songNameP = document.createElement("p");
   let nameOfTheSong = songName.replace("static/songs/", "");
+ 
+  songNameP.innerHTML = "This Song Will Be Expired After 2 Hours \n Download It For Better Performance ✌️😁";
+ setTimeout(() => {
+  songNameP.innerHTML = "";
   songNameP.innerHTML = nameOfTheSong;
+ }, 6000);
 
   appendChildren(audio, [source]);
-  appendChildren(musicContainer, [audio, songNameP]);
+  appendChildren(container, [audio, songNameP]);
 
-  return musicContainer;
+  return container;
 }
 
 // Utility function to create a bot message container element
