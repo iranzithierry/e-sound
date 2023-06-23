@@ -93,7 +93,7 @@ function handleSubmit(e) {
             });
 
             const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
-            localStorage.setItem("all-chats", chatHistory);
+            localStorage.setItem("chats-06", chatHistory);
           }, 10000);
           chatbox.appendChild(musicContainer);
           plyr.setup("#player");
@@ -118,7 +118,7 @@ function handleSubmit(e) {
             });
 
             const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
-            localStorage.setItem("all-chats", chatHistory);
+            localStorage.setItem("chats-06", chatHistory);
           }, 10000);
         }
       } else if (xhr.status === 500) {
@@ -360,7 +360,7 @@ function writingCode(codes, codeElement) {
 
 // Function to load chat history from local storage
 function loadDataFromLocalstorage() {
-  if (localStorage.getItem("all-chats")) {
+  if (localStorage.getItem("chats-06")) {
     welcomeMsg.classList.remove("remove");
     chatbox.innerHTML = localStorage.getItem("all-chats");
   }
@@ -369,6 +369,6 @@ function loadDataFromLocalstorage() {
 // Call the function to load chat history from local storage
 loadDataFromLocalstorage();
 delIcon.addEventListener("click", () => {
-  localStorage.removeItem("all-chats"); // Remove
+  localStorage.removeItem("chats-06"); // Remove
   window.location.reload(); // Reload
 });
