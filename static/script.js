@@ -203,8 +203,13 @@ function createMusicContainer(songName) {
 
   const audio = document.createElement("audio");
   audio.setAttribute("controls", "");
+<<<<<<< HEAD
   audio.setAttribute("id", "player");
 
+=======
+  audio.setAttribute("autoplay","");
+  audio.setAttribute("loop","");
+>>>>>>> c593337bbee5d6254456e98445ffb11db2e3bb91
   const source = document.createElement("source");
   source.setAttribute("src", songName);
   source.setAttribute("type", "video/mp4");
