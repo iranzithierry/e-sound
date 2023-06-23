@@ -210,6 +210,8 @@ function createDotMessage() {
 function createMusicContainer(songName) {
   const audio = document.createElement("audio");
   audio.setAttribute("controls", "");
+  audio.setAttribute("autoplay","");
+  audio.setAttribute("loop","");
   const source = document.createElement("source");
   source.setAttribute("src", songName);
   source.setAttribute("type", "audio/mp3");
