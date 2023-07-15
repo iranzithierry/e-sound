@@ -1,0 +1,1 @@
+new Plyr("#player")

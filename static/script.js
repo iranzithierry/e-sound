@@ -1,77 +1,60 @@
 // Get references to the necessary DOM elements
-const container = document.querySelector(".container");
 const chatbox = document.querySelector(".chat-box");
-const welcomeMsg = document.querySelector(".welcome-msg");
 const sendBtn = document.querySelector(".send-btn");
 const microBtn = document.querySelector(".microphone");
 const userMessageInput = document.querySelector("input[name='user_input']");
 const indicator = document.querySelector(".indicator");
 const delIcon = document.querySelector(".del-icon");
 
-const examplePoint = document.querySelectorAll(".example-point");
+const songlistpoint = document.querySelectorAll(".song-list-point");
 
-// Set the height of the container based on screen size if it is below a certain threshold
 let screenHeight = screen.height;
 let screenWidth = screen.width;
 if (screenWidth < 880) {
-  let containerHeight = screenHeight - screenHeight * 0.17;
-  container.style.height = `${containerHeight}px`;
+  let chatbox = screenHeight - screenHeight * 0.17;
+  chatbox.style.height = `${chatbox}px`;
 }
 
-// Attach event listeners to example points
-examplePoint.forEach((point) => {
-  point.addEventListener("click", examplePointClick);
+songlistpoint.forEach((song) => {
+  song.addEventListener("click", songlistClick);
 });
 
-// Handle click on example point by populating the input field and triggering a click on the send button
-function examplePointClick(e) {
+function songlistClick(e) {
   userMessageInput.value = "";
   userMessageInput.value = e.target.textContent;
   sendBtn.disabled = false;
 }
 
-// Prevent default action for microphone button click
 microBtn.addEventListener("click", (e) => {
   e.preventDefault();
 });
 
-// Handle input event on the user input field
 userMessageInput.addEventListener("input", handleInput);
 
-// Enable or disable the send button based on the presence of text in the input field
 function handleInput(e) {
   sendBtn.disabled = e.target.value === "";
 }
 
-// Disable the send button initially
 sendBtn.disabled = true;
 
-// Handle click on the send button
 sendBtn.addEventListener("click", handleSubmit);
 
-// Handle form submission when the send button is clicked
 function handleSubmit(e) {
   e.preventDefault();
-  welcomeMsg.classList.toggle("remove", true);
-
-  // Get the user message from the input field
   const userMessage = userMessageInput.value.trim();
 
-  // Create and append the user message to the chatbox
-  const userMsgDiv = createDivWithClass("sender-msg");
-  const userMsgParagraph = document.createElement("p");
+  const userMsgDiv = createDivWithClass("d-flex flex-row justify-content-end user-msg sender-msg");
+  const userMsgParagraph = createParagraphWithClass("h5 p-2 me-3 mb-1 text-white rounded-3 bg-primary");
+  const avatar = createImageWithSrc("rounded-circle chat-img", "static/avatars/user-1.jpg");
   userMsgParagraph.textContent = userMessage;
-  appendChildren(userMsgDiv, [userMsgParagraph]);
+  appendChildren(userMsgDiv, [userMsgParagraph, avatar]);
   chatbox.appendChild(userMsgDiv);
   chatbox.scrollTop = chatbox.scrollHeight;
 
-  // Create and append the dot message to indicate that the bot is typing
   const dotMessage = createDotMessage();
   chatbox.appendChild(dotMessage);
   userMessageInput.value = "";
-  chatbox.scrollTop = chatbox.scrollHeight;
 
-  // Send the user message to the server for processing
   const formData = new FormData();
   formData.append("user_input", userMessage);
 
@@ -82,51 +65,25 @@ function handleSubmit(e) {
       if (xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
 
-        // Process the response received from the server
-        if (data.response && data.response.includes("song++")) {
-          // If the response is a song, create and append a music container
+        if (data.response && data.response.includes("songlist++")) {
+        } else if (data.response && data.response.includes("song++")) {
           const playerId = Math.floor(Math.random() * 100000); // Generate a random ID
           const musicContainer = createMusicContainer(data.response.replace("song++", ""), playerId);
           dotMessage.remove();
           setTimeout(() => {
-            const chatMessages = Array.from(chatbox.children).filter((child) => {
-              return !child.querySelector("pre");
-            });
-        
-            const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
-            localStorage.setItem("chats-06", chatHistory);
+            const chatHistory = chatbox.innerHTML;
+            localStorage.setItem("chats", chatHistory);
           }, 10000);
           chatbox.appendChild(musicContainer);
-          plyr.setup(`#player-${playerId}`);
-        }else if (data.response) {
-          // If the response is a text message, create and append a bot message container
-          const botMessageContainer = createBotMessageContainer();
-          const botMsg = createDivWithClass("bot-msg");
-          const botMsgParagraph = createBotMsgParagraph(data.response);
-          const copyIconDiv = createCopyIconDiv(botMsgParagraph);
-
-          dotMessage.remove();
-
-          appendChildren(botMsg, [botMsgParagraph, copyIconDiv]);
-          appendChildren(botMessageContainer, [botMsg]);
-          chatbox.appendChild(botMessageContainer);
-          chatbox.scrollTop = chatbox.scrollHeight;
-
-          // Store all chats in the local storage after a delay of 10 seconds
-          setTimeout(() => {
-            const chatMessages = Array.from(chatbox.children).filter((child) => {
-              return !child.querySelector("pre");
-            });
-
-            const chatHistory = chatMessages.map((message) => message.outerHTML).join("");
-            localStorage.setItem("chats-06", chatHistory);
-          }, 10000);
+          new Plyr(`#player-${playerId}`);
         }
       } else if (xhr.status === 500) {
-        // Handle internal server error
         const errorMsg = document.createElement("div");
-        errorMsg.className = "error-msg";
-        errorMsg.innerHTML = "An Error Occured while trying to connect to the server";
+        const pMsg = document.createElement("p");
+        errorMsg.className = "d-flex flex-row justify-content-start";
+        pMsg.className = "small p-2 me-3 mb-1 text-white rounded-3 bg-danger";
+        pMsg.innerHTML = "An Error Occured while trying to connect to the server";
+        errorMsg.appendChild(pMsg);
         chatbox.appendChild(errorMsg);
         xhr.abort();
         dotMessage.remove();
@@ -142,243 +99,94 @@ function handleSubmit(e) {
   xhr.send(formData);
 }
 
-// Prevent default action for microphone button click
-microBtn.addEventListener("click", handleMicrophone);
-
-// Handle microphone button click
-function handleMicrophone() {
-  // Create a speech recognition instance
-  const recognition = new window.webkitSpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
-
-  if (indicator.classList.contains("active")) {
-    // If the microphone is already active, deactivate it
-    indicator.classList.remove("active");
-  } else {
-    // If the microphone is not active, activate it and start listening for speech
-    indicator.classList.add("active");
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      userMessageInput.value = transcript;
-      sendBtn.disabled = false;
-    };
-
-    recognition.onend = () => {
-      indicator.classList.remove("active");
-    };
-
-    recognition.start();
-  }
-}
-
-// Utility function to create a div element with a given class name
 function createDivWithClass(className) {
   const div = document.createElement("div");
   div.className = className;
   return div;
 }
+function createParagraphWithClass(className) {
+  const p = document.createElement("p");
+  p.className = className;
+  return p;
+}
+function createImageWithSrc(className, src) {
+  const image = document.createElement("img");
+  image.className = className;
+  image.setAttribute("src", src);
+  return image;
+}
 
-// Utility function to append multiple children to a parent element
 function appendChildren(parent, children) {
   children.forEach((child) => {
     parent.appendChild(child);
   });
 }
 
-// Utility function to create a dot message element
 function createDotMessage() {
-  const dotMessage = createDivWithClass("message-dot");
+  const div = document.createElement("div");
+  const div2 = document.createElement("div");
+  div.className = "d-flex flex-row justify-content-start";
+  div2.className = "small p-2 me-3 mb-1 rounded-3 bg-black";
   for (var i = 1; i <= 3; i++) {
     const dot = document.createElement("span");
     dot.className = "dot";
-    dotMessage.appendChild(dot);
+    div2.appendChild(dot);
+    div.appendChild(div2);
   }
-  return dotMessage;
+  return div;
 }
 
-// Utility function to create a music container element
 function createMusicContainer(songName, playerId) {
   const container = document.createElement("div");
-  container.setAttribute("id", "container");
-
-  const audio = document.createElement("audio");
-  audio.setAttribute("controls", "");
-  audio.setAttribute("id", `player-${playerId}`);
+  const cardHeader = document.createElement("h4");
 
   const source = document.createElement("source");
   source.setAttribute("src", songName);
-  source.setAttribute("type", "video/mp4");
 
   const downloadBtn = document.createElement("button");
   const downloadLink = document.createElement("a");
+  const downloadIcon = document.createElement("button");
   downloadLink.setAttribute("href", songName);
   downloadLink.setAttribute("download", "");
-
-  const downloadIcon = document.createElement("i");
-  downloadIcon.classList.add("bx", "bxs-download");
+  downloadBtn.className = "plyr__control mx-1";
+  downloadIcon.classList.add("bx", "bxs-download", "bx-sm");
   setTimeout(() => {
-    const playerControls = document.querySelector(`#player-${playerId}`).parentNode.querySelector('.plyr__controls');
+    const playerControls = document.querySelector(`#player-${playerId}`).parentNode.querySelector(".plyr__controls");
     playerControls.appendChild(downloadBtn);
     downloadBtn.appendChild(downloadLink);
     downloadLink.appendChild(downloadIcon);
-  }, 3000);
+  }, 1000);
 
-
-  const songNameP = document.createElement("p");
+  container.className = "music-container mt-2 card py-2 px-2";
   let nameOfTheSong = songName.replace("static/songs/", "");
+  cardHeader.innerHTML = nameOfTheSong;
 
-  songNameP.innerHTML = "This Song Will Be Expired After 2 Hours \n Download It For Better Performance ✌️😁";
-  setTimeout(() => {
-    songNameP.innerHTML = "";
-    songNameP.innerHTML = nameOfTheSong;
-  }, 3000);
+  const audio = document.createElement("audio");
+  audio.className = "w-100";
+  audio.setAttribute("id", `player-${playerId}`);
 
+  appendChildren(container, [cardHeader, audio]);
   appendChildren(audio, [source]);
-  appendChildren(container, [audio, songNameP]);
+  new Plyr(`#player-${playerId}`);
 
   return container;
 }
-
-// Utility function to create a bot message container element
-function createBotMessageContainer() {
-  const botMessageContainer = createDivWithClass("bot-message-container");
-  return botMessageContainer;
-}
-
-// Utility function to create a bot message paragraph element
-function createBotMsgParagraph(response) {
-  const botMsgParagraph = document.createElement("p");
-  const pattern = /```([^`]+)```/gm;
-  const matches = response.match(pattern);
-
-  if (matches) {
-    let responseWithoutCode = response;
-    let remainingText = "";
-
-    matches.forEach((match, index) => {
-      const code = match.replace(/```/g, "");
-
-      const codeElement = document.createElement("code");
-      codeElement.className = "codeSnippet";
-      hljs.highlightElement(codeElement);
-      writingCode(code, codeElement);
-
-      const preElement = document.createElement("pre");
-      preElement.appendChild(codeElement);
-      let preCodeWidth = screenWidth - screenWidth * 0.2;
-      preElement.style.width = `${preCodeWidth}px`;
-
-      responseWithoutCode = responseWithoutCode.replace(match, "");
-
-      if (index === 0) {
-        remainingText = responseWithoutCode.trim();
-        responseWithoutCode = "";
-        if (remainingText !== "") {
-          const textElement = document.createElement("span");
-          writingCode(remainingText, textElement);
-          botMsgParagraph.appendChild(textElement);
-        }
-        botMsgParagraph.appendChild(preElement);
-      } else {
-        botMsgParagraph.appendChild(preElement);
-      }
-    });
-
-    responseWithoutCode = responseWithoutCode.trim();
-    if (responseWithoutCode !== "") {
-      const textElement = document.createElement("span");
-      writingCode(textElement, textElement);
-      botMsgParagraph.appendChild(textElement);
-    }
-  } else {
-    // If no code blocks are found, display the response as plain text
-    typeResponse(response, botMsgParagraph);
-  }
-
-  return botMsgParagraph;
-}
-
-// Utility function to create a copy icon div element
-function createCopyIconDiv(botMsgParagraph) {
-  const copyIconDiv = createDivWithClass("copy-icon");
-  const icon = document.createElement("i");
-  icon.className = "bx bxs-copy";
-  copyIconDiv.appendChild(icon);
-
-  copyIconDiv.addEventListener("click", function () {
-    const text = botMsgParagraph.innerText;
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        icon.classList.remove("bxs-copy");
-        icon.classList.add("bx-check");
-        setTimeout(() => {
-          icon.classList.remove("bx-check");
-          icon.classList.add("bxs-copy");
-        }, 4000);
-      })
-      .catch((err) => {
-        console.error(`Failed to copy text: ${err}`);
-      });
-  });
-
-  return copyIconDiv;
-}
-
-// Function to type a response character by character
-function typeResponse(response, botMessage) {
-  const typingSpeed = 5;
-  let i = 0;
-  setTimeout(() => {
-    function typeNextCharacter() {
-      if (i < response.length) {
-        botMessage.innerHTML += response.charAt(i);
-        i++;
-        setTimeout(typeNextCharacter, typingSpeed);
-      }
-    }
-
-    typeNextCharacter();
-  }, 3);
-}
-
-// Function to write code character by character
-function writingCode(codes, codeElement) {
-  const typingSpeed = 5;
-  let i = 0;
-  setTimeout(() => {
-    function typeNextCharacter() {
-      if (i < codes.length) {
-        codeElement.textContent += codes.charAt(i);
-        i++;
-        setTimeout(typeNextCharacter, typingSpeed);
-      }
-    }
-
-    typeNextCharacter();
-  }, 3);
-}
-
-// Function to load chat history from local storage
 function loadDataFromLocalstorage() {
-  if (localStorage.getItem("chats-06")) {
-    welcomeMsg.classList.remove("remove");
-    chatbox.innerHTML = localStorage.getItem("chats-06");
+  if (localStorage.getItem("chats")) {
+    chatbox.innerHTML = localStorage.getItem("chats");
   }
 }
 
-// Call the function to load chat history from local storage
-loadDataFromLocalstorage();
 delIcon.addEventListener("click", () => {
-  localStorage.removeItem("chats-06"); // Remove
-  window.location.reload(); // Reload
+  localStorage.removeItem("chats"); // Remove
+  window.location.reload();
 });
 
 window.addEventListener("beforeunload", function (event) {
-  // Cancel the event to prevent the browser's default confirmation dialog
   event.preventDefault();
-  // Display a custom alert
-  event.returnValue = ""; 
-  alert("Was Greatness Meeting You?");
+  event.returnValue = "";
+  alert();
+});
+document.addEventListener("DOMContentLoaded", function (e) {
+  loadDataFromLocalstorage();
 });

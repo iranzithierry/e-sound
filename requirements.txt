@@ -2,8 +2,6 @@ yt-dlp
 youtube-dl
 youtube-search
 youtube-search-python
-openai
-regex
 requests
 requests-oauthlib
 Flask

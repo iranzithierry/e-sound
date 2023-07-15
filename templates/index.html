@@ -8,85 +8,121 @@
 <!-- IRANZI Thierry Author -->
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='core.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='demo.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='theme-default.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='plyr.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/boxicons.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/Font_Awesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/Material_Design/css/materialdesignicons.min.css') }}" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- boxicons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <!-- highlighter css -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
-    <!-- highlighter js -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-E4G5BMXPJL"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-        gtag('config', 'G-E4G5BMXPJL');
+      gtag("config", "G-E4G5BMXPJL");
     </script>
     <title>More AI</title>
-</head>
+  </head>
 
-<body>
-    <div class="container">
-        <header class="header">
-            <a class="title" href="/">
-                <img src="static/favicon.png" alt="" srcset="">
+  <body>
+    <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+      <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+        <div class="navbar-nav align-items-center">
+          <div class="avatar avatar-online">
+            <img src="static/favicon.ico" alt="user-icon" class="object-fit-cover rounded-circle" />
+          </div>
+        </div>
+        <ul class="navbar-nav flex-row align-items-center ms-auto">
+          <style>
+            .avatar img {
+              object-fit: cover;
+              -o-object-fit: cover;
+              object-position: center;
+              -o-object-position: center;
+            }
+            .chat-img {
+              width: 40px;
+              height: 100%;
+            }
+            .music-container {
+              width: fit-content;
+            }
+          </style>
+
+          <li>
+            <a class="dropdown-item" href="#">
+              <div class="d-flex">
+                <button class="btn btn-danger del-icon" href="javascript:void(0);">
+                  <i class="bx bx-trash bx-sm"></i>
+                </button>
+              </div>
             </a>
-            <div class="del-icon" title="Delete Chat">
-                <span>Delete Chat</span>
-                <i class='bx bxs-trash-alt'></i>
-            </div>
-        </header>
-        <div class="chat-box">
-            <div class="welcome-msg">
-                <h1>Welcome To More Chatbot</h1>
-                <small>New Update  23 June - Audio Player Interface 😁</small>
-                <div class="columns">
-                    <ul class="col-1">
-                        <h2>What Ican</h2>
-                        <li>As Spotify</li>
-                        <li>Answer All Your Questions</li>
-                        <li>As Transalator</li>
-                        <li>As Teacher</li>
-                        <li>As Doctor</li>
-                    </ul>
-                    <ul class="col-2">
-                        <h2>Examples</h2>
-                        <li class="example-point">Play Song Away By Ariel Ways</li>
-                        <li class="example-point">What Is Photosyntesis</li>
-                        <li class="example-point">How To Say Morning In French</li>
-                        <li class="example-point">How To Solve Trigonometry</li>
-                        <li class="example-point">How To Treat Skin Lashes</li>
-                    </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <section class="content-wrapper">
+      <div class="py-5 px-4">
+        <div class="card">
+          <div class="card-body">
+            <!-- chatbox -->
+            <div class="chat-box mb-3 px-2 py-2" data-mdb-perfect-scrollbar="true" style="position: relative" id="vertical-example">
+              <div class="col-12 col-lg-6 mb-4 mb-xl-0 song-list">
+                <!-- <small class="text-light fw-semibold">Song List List</small> -->
+                <div class="list-group">
+                  <div class="bg-black list-group-item list-group-item-action d-flex align-items-center cursor-pointer">
+                    <img src="static/avatars/user-1.jpg" alt="User Image" class="rounded-circle me-3 w-px-50" />
+                    <div class="w-100 d-flex align-items-center">
+                      <div class="text-white text-wrap">New update| 🎉 no need to add <span class="text-danger h6">play song</span></div>
+                    </div>
+                  </div>
+                  <div class="list-group-item list-group-item-action align-items-center cursor-pointer song-list-point">
+                    <h6>Click here Example:👇</h6>
+                    <div>Bermusa By Davis</div>
+                  </div>
                 </div>
+              </div>
             </div>
+            <!-- form -->
+            <form method="POST" class="d-flex justify-content-between align-items-center">
+              <input type="text" class="form-control message-input border-0 me-3 shadow-none user-input" placeholder="Enter name of the song" name="user_input" />
+              <div class="message-actions d-flex align-items-center gap-1">
+                <button class="btn btn-dark microphone">
+                  <i class="speech-to-text bx bx-microphone bx-sm cursor-pointer"></i>
+                </button>
+                <button class="btn btn-primary send-btn" type="submit">
+                  <i class="bx bx-paper-plane bx-sm cursor-pointer"></i>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="indicator">
-            <span>Listening &nbsp;</span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-        </div>
-        <form method="POST">
-            <input type="text" name="user_input" placeholder="Enter your message" class="user-input">
-            <button type="submit" class="send-btn"><i class='bx bxs-send'></i></button>
-            <button class="microphone"><i class='bx bx-microphone'></i></button>
-        </form>
-    </div>
-
+      </div>
+    </section>
+    <script src="{{ url_for('static', filename='plyr.js') }}"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <link rel="stylesheet" href="https://cdn.plyr.io/2.0.15/plyr.css" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='player.css') }}">
-    <script src="https://cdn.plyr.io/2.0.15/plyr.js"></script>
-</body>
-
+    <script src="{{ url_for('static', filename='media-player.js') }}"></script>
+    <script src="{{ url_for('static', filename='perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ url_for('static', filename='helpers.js') }}"></script>
+    <script src="{{ url_for('static', filename='template-customizer.js') }}"></script>
+    <script src="{{ url_for('static', filename='config.js') }}"></script>
+    <script src="{{ url_for('static', filename='extended-perfects-scrollbar.js') }}"></script>
+  </body>
 </html>
