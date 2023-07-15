@@ -5,14 +5,20 @@ const microBtn = document.querySelector(".microphone");
 const userMessageInput = document.querySelector("input[name='user_input']");
 const indicator = document.querySelector(".indicator");
 const delIcon = document.querySelector(".del-icon");
+const navbar = document.getElementById('layout-navbar');
+const content = document.querySelector('.content');
 
 const songlistpoint = document.querySelectorAll(".song-list-point");
 
 let screenHeight = screen.height;
 let screenWidth = screen.width;
 if (screenWidth < 880) {
-  let chatbox = screenHeight - screenHeight * 0.17;
-  chatbox.style.height = `${chatbox}px`;
+  let chatboxHeight = screenHeight - screenHeight * 0.17;
+  chatbox.style.height = `${chatboxHeight}px`;
+  navbar.classList.remove('navbar-detached', 'align-items-center', 'bg-navbar-theme')
+  content.classList.remove('py-5','px-4')
+  navbar.classList.add('py-2','px-2')
+  content.classList.add('py-2','px-2')
 }
 
 songlistpoint.forEach((song) => {
