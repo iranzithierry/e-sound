@@ -13,7 +13,7 @@ const songlistpoint = document.querySelectorAll(".song-list-point");
 let screenHeight = screen.height;
 let screenWidth = screen.width;
 if (screenWidth < 880) {
-  let chatboxHeight = screenHeight - screenHeight * 0.17;
+  let chatboxHeight = screenHeight - screenHeight * 0.37;
   chatbox.style.height = `${chatboxHeight}px`;
   navbar.classList.remove('navbar-detached', 'align-items-center', 'bg-navbar-theme')
   content.classList.remove('py-5','px-4')
