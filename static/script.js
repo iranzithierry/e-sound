@@ -12,12 +12,12 @@ const songlistpoint = document.querySelectorAll(".song-list-point");
 let screenHeight = screen.height;
 let screenWidth = screen.width;
 if (screenWidth < 880) {
-  let chatboxHeight = screenHeight - screenHeight * 0.40;
+  let chatboxHeight = screenHeight - screenHeight * 0.35;
   chatbox.style.height = `${chatboxHeight}px`;
   navbar.classList.remove('navbar-detached', 'align-items-center', 'bg-navbar-theme')
-  content.classList.remove('py-5','px-4')
+  content.classList.remove('py-2','px-3')
   navbar.classList.add('py-2','px-2')
-  content.classList.add('py-2','px-2')
+  content.classList.add('py-1','px-1')
 }
 
 songlistpoint.forEach((song) => {
@@ -44,17 +44,23 @@ function handleSubmit(e) {
   e.preventDefault();
   const userMessage = userMessageInput.value.trim();
 
-  const userMsgDiv = createDivWithClass("d-flex flex-row justify-content-end user-msg sender-msg");
+  const userMsgDiv = createDivWithClass("d-flex flex-row justify-content-end user-msg sender-msg mt-1 mb-1");
   const userMsgParagraph = createParagraphWithClass("h5 p-2 me-3 mb-1 text-white rounded-3 bg-primary");
   const avatar = createImageWithSrc("rounded-circle chat-img", "static/avatars/user-1.jpg");
   userMsgParagraph.textContent = userMessage;
   appendChildren(userMsgDiv, [userMsgParagraph, avatar]);
   chatbox.appendChild(userMsgDiv);
   chatbox.scrollTop = chatbox.scrollHeight;
+  sendBtn.disabled = true;
 
   const dotMessage = createDotMessage();
   chatbox.appendChild(dotMessage);
   userMessageInput.value = "";
+  if(dotMessage){
+    userMessageInput.disabled = true;
+  }else{
+    userMessageInput.disabled = false;
+  }
 
   const formData = new FormData();
   formData.append("user_input", userMessage);
@@ -74,6 +80,9 @@ function handleSubmit(e) {
           setTimeout(() => {
             const chatHistory = chatbox.innerHTML;
             localStorage.setItem("chats", chatHistory);
+            
+            
+            
           }, 10000);
           chatbox.appendChild(musicContainer);
           new Plyr(`#player-${playerId}`);
@@ -88,6 +97,7 @@ function handleSubmit(e) {
         chatbox.appendChild(errorMsg);
         xhr.abort();
         dotMessage.remove();
+        userMessageInput.disabled = false;
         setTimeout(() => {
           errorMsg.remove();
         }, 4000);
