@@ -13,7 +13,7 @@ const songlistpoint = document.querySelectorAll(".song-list-point");
 let screenHeight = screen.height;
 let screenWidth = screen.width;
 if (screenWidth < 880) {
-  let chatboxHeight = screenHeight - screenHeight * 0.57;
+  let chatboxHeight = screenHeight - screenHeight * 0.40;
   chatbox.style.height = `${chatboxHeight}px`;
   navbar.classList.remove('navbar-detached', 'align-items-center', 'bg-navbar-theme')
   content.classList.remove('py-5','px-4')
@@ -144,7 +144,7 @@ function createDotMessage() {
 
 function createMusicContainer(songName, playerId) {
   const container = document.createElement("div");
-  const cardHeader = document.createElement("h4");
+  const cardHeader = document.createElement("h6");
 
   const source = document.createElement("source");
   source.setAttribute("src", songName);
@@ -163,12 +163,11 @@ function createMusicContainer(songName, playerId) {
     downloadLink.appendChild(downloadIcon);
   }, 1000);
 
-  container.className = "music-container mt-2 card py-2 px-2";
+  container.className = "music-container mt-2 card py-1 px-1";
   let nameOfTheSong = songName.replace("static/songs/", "");
   cardHeader.innerHTML = nameOfTheSong;
 
   const audio = document.createElement("audio");
-  audio.className = "w-100";
   audio.setAttribute("id", `player-${playerId}`);
 
   appendChildren(container, [cardHeader, audio]);
