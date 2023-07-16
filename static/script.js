@@ -56,12 +56,7 @@ function handleSubmit(e) {
   const dotMessage = createDotMessage();
   chatbox.appendChild(dotMessage);
   userMessageInput.value = "";
-  if(dotMessage){
-    userMessageInput.disabled = true;
-  }else{
-    userMessageInput.disabled = false;
-  }
-
+  
   const formData = new FormData();
   formData.append("user_input", userMessage);
 
