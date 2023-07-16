@@ -756,7 +756,7 @@ a.plyr__control:before {
     min-width: 0;
     padding: 0;
     transition: box-shadow .3s ease;
-    width: 100%
+    width: 10px;
 }
 
 .plyr--full-ui input[type=range]::-webkit-slider-runnable-track {

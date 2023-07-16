@@ -1,7 +1,6 @@
 // Get references to the necessary DOM elements
 const chatbox = document.querySelector(".chat-box");
 const sendBtn = document.querySelector(".send-btn");
-const microBtn = document.querySelector(".microphone");
 const userMessageInput = document.querySelector("input[name='user_input']");
 const indicator = document.querySelector(".indicator");
 const delIcon = document.querySelector(".del-icon");
@@ -30,10 +29,6 @@ function songlistClick(e) {
   userMessageInput.value = e.target.textContent;
   sendBtn.disabled = false;
 }
-
-microBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-});
 
 userMessageInput.addEventListener("input", handleInput);
 
