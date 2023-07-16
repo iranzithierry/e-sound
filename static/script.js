@@ -4,8 +4,9 @@ const sendBtn = document.querySelector(".send-btn");
 const userMessageInput = document.querySelector("input[name='user_input']");
 const indicator = document.querySelector(".indicator");
 const delIcon = document.querySelector(".del-icon");
-const navbar = document.getElementById('layout-navbar');
-const content = document.querySelector('.content');
+const navbar = document.getElementById("layout-navbar");
+const content = document.querySelector(".content");
+const songlist = document.querySelector(".song-list");
 
 const songlistpoint = document.querySelectorAll(".song-list-point");
 
@@ -14,10 +15,10 @@ let screenWidth = screen.width;
 if (screenWidth < 880) {
   let chatboxHeight = screenHeight - screenHeight * 0.38;
   chatbox.style.height = `${chatboxHeight}px`;
-  navbar.classList.remove('navbar-detached', 'align-items-center', 'bg-navbar-theme')
-  content.classList.remove('py-2','px-3')
-  navbar.classList.add('py-2','px-2')
-  content.classList.add('py-1','px-1')
+  navbar.classList.remove("navbar-detached", "align-items-center", "bg-navbar-theme");
+  content.classList.remove("py-2", "px-3");
+  navbar.classList.add("py-2", "px-2");
+  content.classList.add("py-1", "px-1");
 }
 
 songlistpoint.forEach((song) => {
@@ -42,6 +43,7 @@ sendBtn.addEventListener("click", handleSubmit);
 
 function handleSubmit(e) {
   e.preventDefault();
+  songlist.classList.toggle("d-none", !songlist.classList.contains("d-none"));
   const userMessage = userMessageInput.value.trim();
 
   const userMsgDiv = createDivWithClass("d-flex flex-row justify-content-end user-msg sender-msg mt-1 mb-1");
@@ -56,7 +58,7 @@ function handleSubmit(e) {
   const dotMessage = createDotMessage();
   chatbox.appendChild(dotMessage);
   userMessageInput.value = "";
-  
+
   const formData = new FormData();
   formData.append("user_input", userMessage);
 
@@ -75,9 +77,6 @@ function handleSubmit(e) {
           setTimeout(() => {
             const chatHistory = chatbox.innerHTML;
             localStorage.setItem("chats", chatHistory);
-            
-            
-            
           }, 10000);
           chatbox.appendChild(musicContainer);
           new Plyr(`#player-${playerId}`);

@@ -53,6 +53,16 @@
       .chat-box {
         padding-right: 10px;
       }
+      .footer{
+        border-radius: 10px 10px 0 0;
+        margin-top: 1rem;
+      }
+      .send-btn{
+        right: 0;
+      }
+      .user-input{
+        padding-right: 4.5rem;
+      }
     </style>
   </head>
 
@@ -90,11 +100,21 @@
     </div>
     <nav class="layout-navbar navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        <div class="navbar-nav align-items-center">
-          <div class="avatar avatar-online">
-            <img src="static/favicon.ico" alt="user-icon" class="object-fit-cover rounded-circle" />
-          </div>
-        </div>
+
+          <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+            <div class="avatar avatar-online">
+              <img src="static/favicon.ico" alt="user-icon" class="object-fit-cover rounded-circle" />
+            </div>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-start">
+            <li>
+              <a class="dropdown-item" href="javascript:void(0);">
+                <i class="bx bx-coffee"></i>
+                <span class="align-middle">Buy Me Coffe</span>
+              </a>
+            </li>
+          </ul>
+
         <ul class="navbar-nav flex-row align-items-center ms-auto">
           <li>
             <a class="dropdown-item" href="#">
@@ -133,13 +153,26 @@
             <!-- /chatbox -->
             <!-- form -->
             <form method="POST" class="d-flex justify-content-between align-items-center">
-              <input type="text" class="form-control message-input border-0 me-3 shadow-none user-input" placeholder="Enter name of the song" name="user_input" data-bs-toggle="tooltip" data-bs-offset="0,8" data-bs-placement="top" data-bs-custom-class="tooltip-primary" data-bs-original-title="Write Name of the song you want here 👇" />
-              <div class="message-actions d-flex align-items-center gap-1">
-                <button class="btn btn-primary send-btn" type="submit">
+              <input type="text" class="form-control message-input border-1 me-3 shadow-none user-input py-3" placeholder="Enter name of the song" name="user_input" data-bs-toggle="tooltip" data-bs-offset="0,8" data-bs-placement="top" data-bs-custom-class="tooltip-primary" data-bs-original-title="Write Name of the song you want here 👇" />
+                <button class="btn btn-primary position-absolute send-btn me-4" type="submit">
                   <i class="bx bx-paper-plane bx-sm cursor-pointer"></i>
                 </button>
-              </div>
             </form>
+
+              <footer class="footer bg-footer-theme">
+                <div class="container-fluid d-flex flex-md-row flex-column justify-content-between align-items-md-center gap-1 container-p-x mt-1">
+                  <div>
+                    <a href="" target="_blank" class="footer-text h5">eSound</a>
+                  </div>
+                  
+                  <div class="social-icon my-3">
+                    <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-facebook me-2"><i class='bx bxl-facebook'></i></a>
+                    <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-twitter me-2"><i class='bx bxl-twitter'></i></a>
+                    <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-linkedin me-2"><i class='bx bxl-linkedin'></i></a>
+                    <a href="javascript:void(0)" class="btn btn-icon btn-sm btn-github"><i class='bx bxl-github'></i></a>
+                  </div>
+                </div>
+              </footer>
             <!-- /form -->
           </div>
         </div>
