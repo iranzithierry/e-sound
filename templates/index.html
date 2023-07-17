@@ -35,6 +35,20 @@
 
       gtag("config", "G-E4G5BMXPJL");
     </script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
+    <script>
+      window.OneSignal = window.OneSignal || [];
+      OneSignal.push(function() {
+        OneSignal.init({
+          appId: "b9fa7e58-5327-4a15-aad2-cdc85fd0a8e7",
+          safari_web_id: "web.onesignal.auto.5ffbfb2e-5b9e-4e33-a6e5-d97b1e693743",
+          notifyButton: {
+            enable: true,
+          },
+          subdomainName: "e-sound-onrend",
+        });
+      });
+    </script>
     <title>eSound</title>
     <style>
       .avatar img {
@@ -153,7 +167,7 @@
             <!-- /chatbox -->
             <!-- form -->
             <form method="POST" class="d-flex justify-content-between align-items-center">
-              <input type="text" class="form-control message-input border-1 me-3 shadow-none user-input py-3" placeholder="Enter name of the song" name="user_input" data-bs-toggle="tooltip" data-bs-offset="0,8" data-bs-placement="top" data-bs-custom-class="tooltip-primary" data-bs-original-title="Write Name of the song you want here 👇" />
+              <input type="text" class="form-control message-input border-1 shadow-none user-input py-3" placeholder="Enter name of the song" name="user_input" data-bs-toggle="tooltip" data-bs-offset="0,8" data-bs-placement="top" data-bs-custom-class="tooltip-primary" data-bs-original-title="Write Name of the song you want here 👇" />
                 <button class="btn btn-primary position-absolute send-btn me-4" type="submit">
                   <i class="bx bx-paper-plane bx-sm cursor-pointer"></i>
                 </button>
