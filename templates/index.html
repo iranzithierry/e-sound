@@ -64,18 +64,25 @@
       .user-input {
         padding-right: 5.7rem;
       }
-      form{
+      form {
         left: 0;
         right: 0;
-        margin-left: .25em;
-        margin-right: .25em;
-        margin-bottom: .25rem;
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+        margin-bottom: 0.25rem;
+      }
+      .list-group-item:active,
+      .list-group-item:hover {
+        color: #fff;
+        background-color: #696cff;
+        border-color: #696cff;
+        box-shadow: 0 0.125rem 0.25rem 0 rgba(105, 108, 255, 0.4);
       }
       @media (min-width: 768px) {
-        form{
-          margin-left: 1.2em;
-          margin-right: 1.2em;
-          margin-bottom: 1.5em !important
+        form {
+          margin-left: 1.1em;
+          margin-right: 1.1em;
+          margin-bottom: 1.5em !important;
         }
       }
     </style>
@@ -125,7 +132,7 @@
         <div class="card">
           <div class="card-body py-1 px-1">
             <!-- chatbox -->
-            <div class="chat-box mb-3" data-mdb-perfect-scrollbar="true" style="position: relative" id="vertical-example">
+            <div class="chat-box" data-mdb-perfect-scrollbar="true" style="position: relative" id="vertical-example">
               <div class="col-12 col-lg-6 mb-4 mb-xl-0 song-list">
                 <!-- <small class="text-light fw-semibold">Song List List</small> -->
                 <div class="list-group">
@@ -134,10 +141,6 @@
                     <div class="w-100 d-flex align-items-center">
                       <div class="text-white text-wrap">New update| 🎉 no need to write <span class="text-danger h6">play song</span></div>
                     </div>
-                  </div>
-                  <div class="list-group-item list-group-item-action align-items-center cursor-pointer song-list-point">
-                    <h6>Example:👇</h6>
-                    <div class="point">Bermuda By Davis</div>
                   </div>
                 </div>
               </div>
@@ -151,7 +154,6 @@
               </button>
             </form>
 
-         
             <!-- /form -->
           </div>
         </div>

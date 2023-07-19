@@ -58,7 +58,7 @@ function handleSendMessage(e) {
         if (data && data.songs) {
           const songListBox = createSongListContainer(data.songs);
           dotMessage.remove();
-
+          saveSongsToLocalStorage(data.songs);
           const parentSongList = document.createElement("div");
           parentSongList.className = "col-lg-6";
           const title = document.createElement("small");
@@ -66,6 +66,7 @@ function handleSendMessage(e) {
           title.className = "text-light fw-semibold";
           appendChildren(parentSongList, [title, songListBox]);
           chatboxElement.appendChild(parentSongList);
+          chatboxElement.scrollTop = chatboxElement.scrollHeight;
         }
       } else if (xhr.status === 500) {
         const errorMsg = document.createElement("div");
@@ -166,7 +167,7 @@ function createMusicContainer(songName, playerId) {
 
 function createSongListContainer(songs) {
   const container = document.createElement("div");
-  container.className = "demo-inline-spacing mt-3 mb-3";
+  container.className = "demo-inline-spacing my-1 mx-1";
   const songUlElement = document.createElement("ul");
   songUlElement.className = "list-group";
   for (let song of songs) {
@@ -176,7 +177,7 @@ function createSongListContainer(songs) {
     const icon = document.createElement("i");
     icon.className = "bx bx-music me-2";
     const spinner = document.createElement("span");
-    spinner.className = "spinner-border spinner-border-sm text-primary float-end d-none";
+    spinner.className = "spinner-border spinner-border-sm text-dark float-end d-none";
     spinner.setAttribute("id", `song-${customId}`);
     spinner.setAttribute("role", "status");
     songLiElement.setAttribute("id", `song-${customId}`);
@@ -192,7 +193,7 @@ function createSongListContainer(songs) {
 
 // Event Listeners
 deleteIconElement.addEventListener("click", () => {
-  localStorage.removeItem("chats"); // Remove
+  localStorage.removeItem("songList"); // Remove
   window.location.reload();
 });
 
@@ -201,9 +202,7 @@ window.addEventListener("beforeunload", function (event) {
   event.returnValue = "";
   alert();
 });
-// document.addEventListener("DOMContentLoaded", function (e) {
-//   loadDataFromLocalstorage();
-// });
+
 
 function songRequest(e) {
   console.log(e.target.id);
@@ -230,3 +229,22 @@ function songRequest(e) {
     );
   });
 }
+function saveSongsToLocalStorage(songs) {
+  localStorage.setItem("songList", JSON.stringify(songs));
+}
+
+document.addEventListener("DOMContentLoaded", function (e) {
+  const savedSongs = localStorage.getItem("songList");
+  if (savedSongs) {
+    const songs = JSON.parse(savedSongs);
+    const songListBox = createSongListContainer(songs);
+
+    const parentSongList = document.createElement("div");
+    parentSongList.className = "col-lg-6 mt-3 card my-2";
+    const title = document.createElement("small");
+    title.innerHTML = "You recently searched this:"
+    title.className = "text-light fw-semibold";
+    appendChildren(parentSongList, [title, songListBox]);
+    chatboxElement.appendChild(parentSongList);
+  }
+});
