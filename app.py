@@ -77,4 +77,4 @@ def return_song():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=20060)
+    app.run(debug=True, port=20060)
