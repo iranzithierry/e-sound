@@ -6,8 +6,6 @@ import os
 import re
 
 
-
-
 app = Flask(__name__)
 
 
@@ -15,7 +13,6 @@ def remove_words_in_brackets(text):
     pattern = r"\s*\([^)]*\)"
     return re.sub(pattern, "", text)
 
-    
 
 def download_song(user_input):
     search_query = user_input
@@ -26,7 +23,7 @@ def download_song(user_input):
         video_title = remove_words_in_brackets(video_title_with_brackets)
         video_url = "https://www.youtube.com/watch?v=" + video["id"]
 
-    file_path = os.path.join("static", "songs", f"{video_title}")
+    file_path = os.path.join("static", "songs", f"{video_title}.mp3")
     if os.path.exists(file_path):
         response = file_path
         return response
@@ -34,15 +31,7 @@ def download_song(user_input):
         ydl_opts = {
             "format": "bestaudio/best",
             "outtmpl": f"{file_path}",
-            "postprocessors": [
-                {
-                    "key": "FFmpegExtractAudio",
-                    "preferredcodec": "mp3",
-                    "preferredquality": "192",
-                }
-            ],
         }
-
 
         with YoutubeDL(ydl_opts) as ydl:
             ydl.download([video_url])
@@ -50,8 +39,6 @@ def download_song(user_input):
         print(f"Download complete: {video_title}")
         response = file_path
         return response
-    
-
 
 
 @app.route("/")
@@ -79,19 +66,13 @@ def process():
     return jsonify({"songs": songs})
 
 
-    
-
-
-
 @app.route("/song_request", methods=["POST"])
 def return_song():
     user_input = request.form["song_request"].lower()
     song_request = f"Music {user_input}"
     song = download_song(song_request)
 
-
     return jsonify({"song": song})
-
 
 
 if __name__ == "__main__":
