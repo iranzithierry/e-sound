@@ -10,8 +10,8 @@ const contentElement = document.querySelector(".content");
 const screenHeight = screen.height;
 const screenWidth = screen.width;
 if (screenWidth < 880) {
-  const chatboxHeight = screenHeight - screenHeight * 0.37;
-  chatboxElement.style.height = `${chatboxHeight}px`;
+  const contentElementHeiht = screenHeight - screenHeight * 0.20;
+  contentElement.style.height = `${contentElementHeiht}px`;
   navbarElement.classList.remove("navbar-detached", "align-items-center", "bg-navbar-theme");
   contentElement.classList.remove("py-2", "px-3");
   navbarElement.classList.add("py-2", "px-2");
@@ -223,6 +223,7 @@ function songRequest(e) {
           const musicContainer = createMusicContainer(data.song, playerId);
           chatboxElement.appendChild(musicContainer);
           spinner.classList.add("d-none");
+          chatboxElement.scrollTop = chatboxElement.scrollHeight;
           new Plyr(`#player-${playerId}`);
         }
       }
