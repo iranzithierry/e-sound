@@ -26,7 +26,7 @@ def download_song(user_input):
         video_title = remove_words_in_brackets(video_title_with_brackets)
         video_url = "https://www.youtube.com/watch?v=" + video["id"]
 
-    file_path = os.path.join("static", "songs", f"{video_title}.mp3")
+    file_path = os.path.join("static", "songs", f"{video_title}")
     if os.path.exists(file_path):
         response = file_path
         return response
