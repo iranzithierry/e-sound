@@ -10,8 +10,13 @@ app = Flask(__name__)
 
 
 def remove_words_in_brackets(text):
-    pattern = r"\s*\([^)]*\)"
-    return re.sub(pattern, "", text)
+    brackets_pattern = r"\s*\([^)]*\)"
+    arrays_pattern = r"\s*\[[^\]]*\]"
+
+    text_without_brackets = re.sub(brackets_pattern, "", text)
+    final_result = re.sub(arrays_pattern, "", text_without_brackets)
+    
+    return final_result
 
 
 def download_song(user_input):
