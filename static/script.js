@@ -273,6 +273,17 @@ document.addEventListener("DOMContentLoaded", function (e) {
     title.className = "text-light fw-semibold";
     appendChildren(parentSongList, [title, songListBox]);
     chatboxElement.appendChild(parentSongList);
+  }else{
+    const trendingSongs = ["Alone - Kenny Kshot "," Bermuda -Davis D","Pyramid -Kevin Kade" ,"Up Up -Bruce The 1st", "Element EleéeH - FOU DE TOi"]
+    const songListBox = createSongListContainer(trendingSongs);
+
+    const parentSongList = document.createElement("div");
+    parentSongList.className = "col-lg-6 mt-3 card my-2";
+    const title = document.createElement("small");
+    title.innerHTML = "Trending songs in rwanda";
+    title.className = "text-light fw-semibold";
+    appendChildren(parentSongList, [title, songListBox]);
+    chatboxElement.appendChild(parentSongList);
   }
 });
 function downloadHooks(e, url, parentElement) {
@@ -295,7 +306,7 @@ function downloadHooks(e, url, parentElement) {
             console.log("Download completed!");
             setTimeout(() => {
               childDiv.remove();
-              const textAlert = document.createElement("h5");
+              const textAlert = document.createElement("h6");
               textAlert.innerHTML = "Download completeted";
               textAlert.className = "text-light fw-semibold";
               parentDiv.appendChild(textAlert);
