@@ -246,7 +246,6 @@ function songRequest(e) {
   });
 }
 
-
 function showErrorMsg(msg, parentElement, spinnerElement) {
   const errorMsgParagraph = createParagraphWithClass("h5 p-2 me-3 mb-1 text-white rounded-3 bg-danger");
   errorMsgParagraph.textContent = msg;
@@ -283,7 +282,7 @@ function downloadHooks(e, url, parentElement) {
       let downloaded = 0;
 
       const reader = response.body.getReader();
-      
+
       const parentDiv = createDivWithClass("progress");
       const childDiv = createDivWithClass("progress-bar progress-bar-striped progress-bar-animated bg-primary");
       childDiv.setAttribute("role", "progressbar");

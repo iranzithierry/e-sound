@@ -15,8 +15,9 @@ def remove_words_in_brackets(text):
 
     text_without_brackets = re.sub(brackets_pattern, "", text)
     final_result = re.sub(arrays_pattern, "", text_without_brackets)
-    
+
     return final_result
+
 
 def clean_temp_files():
     directory = "static/songs"
@@ -29,7 +30,7 @@ def clean_temp_files():
             except Exception as e:
                 print(f"Failed to delete file: {file_path}, Error: {e}")
 
-  
+
 def download_song(user_input):
     clean_temp_files()
     search_query = user_input
