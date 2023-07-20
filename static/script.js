@@ -62,6 +62,7 @@ function handleSendMessage(e) {
       }
     })
     .catch((error) => {
+      dotMessage.remove();
       showErrorMsgFirstResponse("An Error Occurred while trying to connect to the server", chatboxElement);
       console.error("Error:", error);
     })
