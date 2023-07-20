@@ -18,8 +18,20 @@ def remove_words_in_brackets(text):
     
     return final_result
 
+def clean_temp_files():
+    directory = "static/songs"
+    for filename in os.listdir(directory):
+        if filename.endswith(".part") or filename.endswith(".ytdl"):
+            file_path = os.path.join(directory, filename)
+            try:
+                os.remove(file_path)
+                print(f"Deleted temporary file: {file_path}")
+            except Exception as e:
+                print(f"Failed to delete file: {file_path}, Error: {e}")
 
+  
 def download_song(user_input):
+    clean_temp_files()
     search_query = user_input
     results = YoutubeSearch(search_query, max_results=1).to_dict()
 
