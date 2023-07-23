@@ -90,3 +90,6 @@
   background-color: transparent;
   font-weight: 400;
 }
+.fit-content {
+  width: fit-content !important;
+}

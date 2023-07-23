@@ -8,7 +8,7 @@ const contentElement = document.querySelector(".content");
 const screenHeight = screen.height;
 const screenWidth = screen.width;
 if (screenWidth < 880) {
-  const chatboxHeight = screenHeight - screenHeight * 0.37;
+  const chatboxHeight = screenHeight - screenHeight * 0.36;
   chatboxElement.style.height = `${chatboxHeight}px`;
   navbarElement.classList.remove("navbar-detached", "align-items-center");
   contentElement.classList.remove("py-2", "px-3");
@@ -58,7 +58,7 @@ function handleSendMessage(e) {
       if (data && data.songs) {
         handleSongsResponse(data.songs, userMessage);
         dotMessage.remove();
-        saveSongsToLocalStorage(data.songs);
+        saveRecentSearchToLocalStorage(data.songs);
       }
     })
     .catch((error) => {
@@ -200,9 +200,9 @@ function createMusicContainer(songName, playerId) {
   return container;
 }
 
-// Event Listeners
 deleteIconElement.addEventListener("click", () => {
-  localStorage.removeItem("songList"); // Remove
+  localStorage.removeItem("songList");
+  localStorage.removeItem("playedSongs");
   window.location.reload();
 });
 
@@ -239,6 +239,7 @@ function songRequest(e) {
         spinner.classList.add("d-none");
         spinner.dataset.audioDownloaded = true;
         chatboxElement.scrollTop = chatboxElement.scrollHeight;
+        playedSongs(response.song, playerId);
         new Plyr(`#player-${playerId}`);
       }
     }
@@ -257,14 +258,22 @@ function showErrorMsg(msg, parentElement, spinnerElement) {
   }, 4000);
 }
 
-function saveSongsToLocalStorage(songs) {
-  localStorage.setItem("songList", JSON.stringify(songs));
+function saveRecentSearchToLocalStorage(songs) {
+  localStorage.setItem("recentSearch", JSON.stringify(songs));
+}
+function playedSongs(song, playerId) {
+  const existingData = localStorage.getItem("playedSongs");
+  let playedSongsList = existingData ? JSON.parse(existingData) : [];
+  const newData = { song: song, playerId: playerId };
+  playedSongsList.push(newData);
+  localStorage.setItem("playedSongs", JSON.stringify(playedSongsList));
 }
 
 document.addEventListener("DOMContentLoaded", function (e) {
-  const savedSongs = localStorage.getItem("songList");
-  if (savedSongs) {
-    const songs = JSON.parse(savedSongs);
+  const recentSearch = localStorage.getItem("recentSearch");
+  const playedSongs = localStorage.getItem("playedSongs");
+  if (recentSearch) {
+    const songs = JSON.parse(recentSearch);
     const songListBox = createSongListContainer(songs);
 
     const parentSongList = document.createElement("div");
@@ -274,16 +283,28 @@ document.addEventListener("DOMContentLoaded", function (e) {
     title.className = "text-light fw-semibold";
     appendChildren(parentSongList, [title, songListBox]);
     chatboxElement.appendChild(parentSongList);
-  }else{
-    const trendingSongs = ["Alone - Kenny Kshot "," Bermuda -Davis D","Pyramid -Kevin Kade" ,"Up Up -Bruce The 1st", "Element EleéeH - FOU DE TOi"]
-    const songListBox = createSongListContainer(trendingSongs);
-
+  }
+  if (playedSongs) {
+    const songs = JSON.parse(playedSongs);
+    songs.forEach((songData, index) => {
+      const { song, playerId } = songData;
+      const musicContainer = createMusicContainer(song, playerId);
+      const parentSongList = document.createElement("div");
+      parentSongList.className = "mt-3 card my-2 py-1 px-1 fit-content";
+      const title = document.createElement("small");
+      title.innerHTML = "You recently played this songs";
+      title.className = "text-light fw-semibold";
+      appendChildren(parentSongList, [title, musicContainer]);
+      chatboxElement.appendChild(parentSongList);
+      new Plyr(`#player-${playerId}`);
+    });
+  } else {
     const parentSongList = document.createElement("div");
     parentSongList.className = "col-lg-6 mt-3 card my-2";
     const title = document.createElement("small");
-    title.innerHTML = "Trending songs in rwanda";
+    title.innerHTML = "Welcome to eSound";
     title.className = "text-light fw-semibold";
-    appendChildren(parentSongList, [title, songListBox]);
+    appendChildren(parentSongList, [title]);
     chatboxElement.appendChild(parentSongList);
   }
 });
