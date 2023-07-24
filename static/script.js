@@ -8,7 +8,7 @@ const contentElement = document.querySelector(".content");
 const screenHeight = screen.height;
 const screenWidth = screen.width;
 if (screenWidth < 880) {
-  const chatboxHeight = screenHeight - screenHeight * 0.36;
+  const chatboxHeight = screenHeight - screenHeight * 0.35;
   chatboxElement.style.height = `${chatboxHeight}px`;
   navbarElement.classList.remove("navbar-detached", "align-items-center");
   contentElement.classList.remove("py-2", "px-3");
