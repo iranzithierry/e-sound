@@ -201,7 +201,7 @@ function createMusicContainer(songName, playerId) {
 }
 
 deleteIconElement.addEventListener("click", () => {
-  localStorage.removeItem("songList");
+  localStorage.removeItem("recentSearch");
   localStorage.removeItem("playedSongs");
   window.location.reload();
 });
