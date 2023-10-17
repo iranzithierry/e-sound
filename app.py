@@ -52,12 +52,14 @@ def download_song(user_input):
     else:
         ydl_opts = {
              'format':'bestaudio/best',
+             'audioformat':'mp3',
              'outtmpl': f'{save_dir}',
-             'postprocessors': [{
-                 'key': 'FFmpegExtractAudio',
-                 'preferredcodec': 'mp3',
-                 'preferredquality': '192',
-             }]
+            # MEMORY ISSUES
+            # 'postprocessors': [{
+            #      'key': 'FFmpegExtractAudio',
+            #      'preferredcodec': 'mp3',
+            #      'preferredquality': '192',
+            #  }]
            
         }
 
