@@ -42,13 +42,24 @@ def download_song(user_input):
         video_url = "https://www.youtube.com/watch?v=" + video["id"]
 
     file_path = os.path.join("static", "songs", f"{video_title}.mp3")
+    save_dir =  os.path.join("static", "songs", "%(title)s")
     if os.path.exists(file_path):
         response = file_path
         return response
     else:
         ydl_opts = {
-            "format": "bestaudio/best",
-            "outtmpl": f"{file_path}",
+             'format':'bestaudio/best',
+             'extractaudio':True,
+             'audioformat':'mp3',
+             'outtmpl': f'{save_dir}',
+             'noplaylist':True,
+             'nocheckcertificate':True,
+             'postprocessors': [{
+                 'key': 'FFmpegExtractAudio',
+                 'preferredcodec': 'mp3',
+                 'preferredquality': '192',
+             }]
+           
         }
 
         with YoutubeDL(ydl_opts) as ydl:
@@ -73,7 +84,7 @@ def serve_song(filename):
 def process():
     user_input = request.form["user_input"].lower()
     song_request = f"Music {user_input}"
-    results = YoutubeSearch(song_request, max_results=5).to_dict()
+    results = YoutubeSearch(song_request, max_results=8).to_dict()
 
     songs = []
     for video in results:
