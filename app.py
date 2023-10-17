@@ -21,14 +21,15 @@ def remove_words_in_brackets(text):
 
 def clean_temp_files():
     directory = "static/songs"
-    for filename in os.listdir(directory):
-        if filename.endswith(".part") or filename.endswith(".ytdl"):
-            file_path = os.path.join(directory, filename)
-            try:
-                os.remove(file_path)
-                print(f"Deleted temporary file: {file_path}")
-            except Exception as e:
-                print(f"Failed to delete file: {file_path}, Error: {e}")
+    if os.path.exists(directory):
+        for filename in os.listdir(directory):
+            if filename.endswith(".part") or filename.endswith(".ytdl"):
+                file_path = os.path.join(directory, filename)
+                try:
+                    os.remove(file_path)
+                    print(f"Deleted temporary file: {file_path}")
+                except Exception as e:
+                    print(f"Failed to delete file: {file_path}, Error: {e}")
 
 
 def download_song(user_input):
