@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 from flask import send_from_directory
 from youtube_search import YoutubeSearch
@@ -9,7 +10,7 @@ import re
 app = Flask(__name__)
 
 
-def remove_words_in_brackets(text):
+def stringfy_title(text):
     brackets_pattern = r"\s*\([^)]*\)"
     arrays_pattern = r"\s*\[[^\]]*\]"
 
@@ -39,11 +40,12 @@ def download_song(user_input):
 
     for video in results:
         video_title_with_brackets = video["title"]
-        video_title = remove_words_in_brackets(video_title_with_brackets)
+        video_title = stringfy_title(video_title_with_brackets).replace(" ","_").replace('"',"").strip()
         video_url = "https://www.youtube.com/watch?v=" + video["id"]
 
     file_path = os.path.join("static", "songs", f"{video_title}.mp3")
-    save_dir =  os.path.join("static", "songs", "%(title)s")
+    save_dir =  os.path.join("static", "songs", f"{video_title}")
+    print(save_dir)
     if os.path.exists(file_path):
         response = file_path
         return response
@@ -90,7 +92,7 @@ def process():
     songs = []
     for video in results:
         video_title = video["title"]
-        result = remove_words_in_brackets(video_title)
+        result = stringfy_title(video_title)
         songs.append(f"{result}")
 
     return jsonify({"songs": songs})
