@@ -52,11 +52,7 @@ def download_song(user_input):
     else:
         ydl_opts = {
              'format':'bestaudio/best',
-             'extractaudio':True,
-             'audioformat':'mp3',
              'outtmpl': f'{save_dir}',
-             'noplaylist':True,
-             'nocheckcertificate':True,
              'postprocessors': [{
                  'key': 'FFmpegExtractAudio',
                  'preferredcodec': 'mp3',
