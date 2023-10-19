@@ -174,8 +174,10 @@ function createMusicContainer(songName, playerId) {
   const downloadBtn = document.createElement("button");
   const downloadLink = document.createElement("a");
   const downloadIcon = document.createElement("button");
-  downloadLink.setAttribute("href", songName);
-  downloadLink.setAttribute("download", "");
+  downloadLink.download = songName;
+  downloadLink.href = songName;
+  downloadLink.target = "_blank";
+  downloadLink.rel = "nofollow";
   downloadBtn.className = "plyr__control mx-1";
 
   downloadIcon.classList.add("bx", "bxs-download", "bx-sm", "btn-plyr-theme");
