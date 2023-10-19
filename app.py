@@ -53,7 +53,7 @@ def download_song(user_input):
         ydl_opts = {
              'format':'bestaudio/best',
              'audioformat':'mp3',
-             'outtmpl': f'{save_dir}',
+             'outtmpl': f'{file_path}',
             # MEMORY ISSUES
             # 'postprocessors': [{
             #      'key': 'FFmpegExtractAudio',
