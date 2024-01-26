@@ -6,7 +6,6 @@ from yt_dlp import YoutubeDL
 import os
 import re
 
-
 app = Flask(__name__)
 
 def stringfy_title(text):
@@ -66,8 +65,8 @@ def download_song(user_input):
             ydl.download([video_url])
 
         print(f"Download complete: {video_title}")
-        response = file_path
-        return response
+        
+        return file_path
 
 
 @app.route("/")
