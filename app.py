@@ -9,7 +9,6 @@ import re
 
 app = Flask(__name__)
 
-
 def stringfy_title(text):
     brackets_pattern = r"\s*\([^)]*\)"
     arrays_pattern = r"\s*\[[^\]]*\]"
