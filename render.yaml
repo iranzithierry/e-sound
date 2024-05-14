@@ -1,7 +1,7 @@
-name: more
+name: eSound
 env: python
 buildCommand: |
   apt-get update
-  apt-get install -y ffmpeg
+  sudo apt  install ffmpeg
   pip install -r requirements.txt
-startCommand: gunicorn app:app
+startCommand: gunicorn -w 4 -t 120 app:app

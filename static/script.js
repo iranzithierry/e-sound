@@ -1,119 +1,89 @@
-// Get references to the necessary DOM elements
-const chatbox = document.querySelector(".chat-box");
-const sendBtn = document.querySelector(".send-btn");
-const userMessageInput = document.querySelector("input[name='user_input']");
-const indicator = document.querySelector(".indicator");
-const delIcon = document.querySelector(".del-icon");
-const navbar = document.getElementById("layout-navbar");
-const content = document.querySelector(".content");
-const songlist = document.querySelector(".song-list");
+const chatboxElement = document.querySelector(".chat-box");
+const sendButtonElement = document.querySelector(".send-btn");
+const userInputElement = document.querySelector("input[name='user_input']");
+const deleteIconElement = document.querySelector(".del-icon");
+const navbarElement = document.getElementById("layout-navbar");
+const contentElement = document.querySelector(".content");
 
-const songlistpoint = document.querySelectorAll(".song-list-point");
-
-let screenHeight = screen.height;
-let screenWidth = screen.width;
+const screenHeight = screen.height;
+const screenWidth = screen.width;
 if (screenWidth < 880) {
-  let chatboxHeight = screenHeight - screenHeight * 0.38;
-  chatbox.style.height = `${chatboxHeight}px`;
-  navbar.classList.remove("navbar-detached", "align-items-center", "bg-navbar-theme");
-  content.classList.remove("py-2", "px-3");
-  navbar.classList.add("py-2", "px-2");
-  content.classList.add("py-1", "px-1");
+  const chatboxHeight = screenHeight - screenHeight * 0.35;
+  chatboxElement.style.height = `${chatboxHeight}px`;
+  navbarElement.classList.remove("navbar-detached", "align-items-center");
+  contentElement.classList.remove("py-2", "px-3");
+  navbarElement.classList.add("py-2", "px-2");
+  contentElement.classList.add("py-1", "px-1");
 }
 
-songlistpoint.forEach((song) => {
-  song.addEventListener("click", songlistClick);
-});
+userInputElement.addEventListener("input", handleUserInput);
 
-function songlistClick(e) {
-  userMessageInput.value = "";
-  userMessageInput.value = e.target.textContent;
-  sendBtn.disabled = false;
+function handleUserInput(e) {
+  sendButtonElement.disabled = e.target.value === "";
 }
 
-userMessageInput.addEventListener("input", handleInput);
+sendButtonElement.disabled = true;
+sendButtonElement.addEventListener("click", handleSendMessage);
 
-function handleInput(e) {
-  sendBtn.disabled = e.target.value === "";
-}
-
-sendBtn.disabled = true;
-
-sendBtn.addEventListener("click", handleSubmit);
-
-function handleSubmit(e) {
+function handleSendMessage(e) {
   e.preventDefault();
-  songlist.classList.toggle("d-none", !songlist.classList.contains("d-none"));
-  const userMessage = userMessageInput.value.trim();
+  const userMessage = userInputElement.value.trim();
 
-  const userMsgDiv = createDivWithClass("d-flex flex-row justify-content-end user-msg sender-msg mt-1 mb-1");
-  const userMsgParagraph = createParagraphWithClass("h5 p-2 me-3 mb-1 text-white rounded-3 bg-primary");
-  const avatar = createImageWithSrc("rounded-circle chat-img", "static/avatars/user-1.jpg");
-  userMsgParagraph.textContent = userMessage;
-  appendChildren(userMsgDiv, [userMsgParagraph, avatar]);
-  chatbox.appendChild(userMsgDiv);
-  chatbox.scrollTop = chatbox.scrollHeight;
-  sendBtn.disabled = true;
+  if (!userMessage) {
+    return;
+  }
+
+  appendUserMessage(userMessage);
+
+  sendButtonElement.disabled = true;
 
   const dotMessage = createDotMessage();
-  chatbox.appendChild(dotMessage);
-  userMessageInput.value = "";
+  chatboxElement.appendChild(dotMessage);
+  userInputElement.value = "";
 
   const formData = new FormData();
   formData.append("user_input", userMessage);
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "/response", true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
-
-        if (data.response && data.response.includes("songlist++")) {
-        } else if (data.response && data.response.includes("song++")) {
-          const playerId = Math.floor(Math.random() * 100000); // Generate a random ID
-          const musicContainer = createMusicContainer(data.response.replace("song++", ""), playerId);
-          dotMessage.remove();
-          setTimeout(() => {
-            const chatHistory = chatbox.innerHTML;
-            localStorage.setItem("chats", chatHistory);
-          }, 10000);
-          chatbox.appendChild(musicContainer);
-          new Plyr(`#player-${playerId}`);
-        }
-      } else if (xhr.status === 500) {
-        const errorMsg = document.createElement("div");
-        const pMsg = document.createElement("p");
-        errorMsg.className = "d-flex flex-row justify-content-start";
-        pMsg.className = "small p-2 me-3 mb-1 text-white rounded-3 bg-danger";
-        pMsg.innerHTML = "An Error Occured while trying to connect to the server";
-        errorMsg.appendChild(pMsg);
-        chatbox.appendChild(errorMsg);
-        xhr.abort();
-        dotMessage.remove();
-        userMessageInput.disabled = false;
-        setTimeout(() => {
-          errorMsg.remove();
-        }, 4000);
-      } else {
-        console.error("Error:", xhr.status);
+  fetch("/request", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    }
-  };
-
-  xhr.send(formData);
+      return response.json();
+    })
+    .then((data) => {
+      if (data && data.songs) {
+        handleSongsResponse(data.songs, userMessage);
+        dotMessage.remove();
+        saveRecentSearchToLocalStorage(data.songs);
+      }
+    })
+    .catch((error) => {
+      dotMessage.remove();
+      showErrorMsgFirstResponse("An Error Occurred while trying to connect to the server", chatboxElement);
+      console.error("Error:", error);
+    })
+    .finally(() => {
+      sendButtonElement.disabled = false;
+    });
 }
 
+// Helper functions
 function createDivWithClass(className) {
   const div = document.createElement("div");
   div.className = className;
   return div;
 }
+
 function createParagraphWithClass(className) {
   const p = document.createElement("p");
   p.className = className;
   return p;
 }
+
 function createImageWithSrc(className, src) {
   const image = document.createElement("img");
   image.className = className;
@@ -128,17 +98,70 @@ function appendChildren(parent, children) {
 }
 
 function createDotMessage() {
-  const div = document.createElement("div");
-  const div2 = document.createElement("div");
-  div.className = "d-flex flex-row justify-content-start";
-  div2.className = "small p-2 me-3 mb-1 rounded-3 bg-black";
+  const parentContainer = document.createElement("div");
+  const childContainer = document.createElement("div");
+  parentContainer.className = "d-flex flex-row justify-content-start";
+  childContainer.className = "small p-2 me-3 mb-1 rounded-3 bg-black";
   for (var i = 1; i <= 3; i++) {
     const dot = document.createElement("span");
     dot.className = "dot";
-    div2.appendChild(dot);
-    div.appendChild(div2);
+    childContainer.appendChild(dot);
+    parentContainer.appendChild(childContainer);
   }
-  return div;
+  return parentContainer;
+}
+function appendUserMessage(message) {
+  const userMessageDiv = createDivWithClass("d-flex flex-row justify-content-end user-msg sender-msg mt-1 mb-1");
+  const userMessageParagraph = createParagraphWithClass("h5 p-2 me-3 mb-1 text-white rounded-3 bg-primary");
+  const userAvatar = createImageWithSrc("rounded-circle chat-img", "static/avatars/user-1.jpg");
+  userMessageParagraph.textContent = message;
+  appendChildren(userMessageDiv, [userMessageParagraph, userAvatar]);
+  chatboxElement.appendChild(userMessageDiv);
+  chatboxElement.scrollTop = chatboxElement.scrollHeight;
+}
+function handleSongsResponse(songs, userMessage) {
+  const songListBox = createSongListContainer(songs);
+  const parentSongList = document.createElement("div");
+  parentSongList.className = "col-lg-6 mt-3 card my-2";
+  const title = document.createElement("small");
+  title.innerHTML = `Search results for: ${userMessage}`;
+  title.className = "text-light fw-semibold";
+  appendChildren(parentSongList, [title, songListBox]);
+  chatboxElement.appendChild(parentSongList);
+  chatboxElement.scrollTop = chatboxElement.scrollHeight;
+}
+function showErrorMsgFirstResponse(msg, parentElement) {
+  const errorMsgParagraph = createParagraphWithClass("h5 p-2 me-3 mb-1 text-white rounded-3 bg-danger");
+  errorMsgParagraph.textContent = msg;
+  parentElement.appendChild(errorMsgParagraph);
+  setTimeout(() => {
+    errorMsgParagraph.remove();
+  }, 4000);
+}
+function createSongListContainer(songs) {
+  const container = document.createElement("div");
+  container.className = "demo-inline-spacing my-1 mx-1";
+  const songUlElement = document.createElement("ul");
+  songUlElement.className = "list-group";
+  for (let song of songs) {
+    const customId = Math.floor(Math.random() * 100000);
+    const songLiElement = document.createElement("li");
+    songLiElement.className = "list-group-item cursor-pointer";
+    const icon = document.createElement("i");
+    icon.className = "bx bx-music me-2";
+    const spinner = document.createElement("span");
+    spinner.className = "spinner-border spinner-border-sm text-dark float-end d-none";
+    spinner.setAttribute("id", `song-${customId}`);
+    spinner.setAttribute("role", "status");
+    songLiElement.setAttribute("id", `song-${customId}`);
+    songLiElement.onclick = (event) => songRequest(event);
+    appendChildren(songLiElement, [icon]);
+    songLiElement.innerHTML += song;
+    appendChildren(songLiElement, [spinner]);
+    songUlElement.appendChild(songLiElement);
+    container.appendChild(songUlElement);
+  }
+  return container;
 }
 
 function createMusicContainer(songName, playerId) {
@@ -151,19 +174,23 @@ function createMusicContainer(songName, playerId) {
   const downloadBtn = document.createElement("button");
   const downloadLink = document.createElement("a");
   const downloadIcon = document.createElement("button");
-  downloadLink.setAttribute("href", songName);
-  downloadLink.setAttribute("download", "");
+  downloadLink.download = songName;
+  downloadLink.href = songName;
+  downloadLink.target = "_blank";
+  downloadLink.rel = "nofollow";
   downloadBtn.className = "plyr__control mx-1";
-  downloadIcon.classList.add("bx", "bxs-download", "bx-sm");
+
+  downloadIcon.classList.add("bx", "bxs-download", "bx-sm", "btn-plyr-theme");
   setTimeout(() => {
     const playerControls = document.querySelector(`#player-${playerId}`).parentNode.querySelector(".plyr__controls");
     playerControls.appendChild(downloadBtn);
     downloadBtn.appendChild(downloadLink);
+    downloadBtn.onclick = (event) => downloadHooks(event, songName, container);
     downloadLink.appendChild(downloadIcon);
   }, 1000);
 
   container.className = "music-container mt-2 card py-1 px-1";
-  let nameOfTheSong = songName.replace("static/songs/", "");
+  let nameOfTheSong = songName.replace("static/songs/", "").replace(".mp3", "");
   cardHeader.innerHTML = nameOfTheSong;
 
   const audio = document.createElement("audio");
@@ -171,18 +198,13 @@ function createMusicContainer(songName, playerId) {
 
   appendChildren(container, [cardHeader, audio]);
   appendChildren(audio, [source]);
-  new Plyr(`#player-${playerId}`);
 
   return container;
 }
-function loadDataFromLocalstorage() {
-  if (localStorage.getItem("chats")) {
-    chatbox.innerHTML = localStorage.getItem("chats");
-  }
-}
 
-delIcon.addEventListener("click", () => {
-  localStorage.removeItem("chats"); // Remove
+deleteIconElement.addEventListener("click", () => {
+  localStorage.removeItem("recentSearch");
+  localStorage.removeItem("playedSongs");
   window.location.reload();
 });
 
@@ -191,6 +213,173 @@ window.addEventListener("beforeunload", function (event) {
   event.returnValue = "";
   alert();
 });
+
+function songRequest(e) {
+  const spinner = document.querySelector(`span[id='${e.target.id}']`);
+  const isAudioDownloaded = Boolean(spinner.dataset.audioDownloaded);
+
+  if (!spinner.classList.contains("d-none")) {
+    return;
+  }
+
+  if (isAudioDownloaded) {
+    return;
+  }
+
+  spinner.classList.remove("d-none");
+
+  $.post(
+    "song_request",
+    {
+      song_request: e.target.textContent,
+    },
+    (response) => {
+      if (response.song) {
+        const playerId = Math.floor(Math.random() * 100000);
+        const musicContainer = createMusicContainer(response.song, playerId);
+        chatboxElement.appendChild(musicContainer);
+        spinner.classList.add("d-none");
+        spinner.dataset.audioDownloaded = true;
+        chatboxElement.scrollTop = chatboxElement.scrollHeight;
+        playedSongs(response.song, playerId);
+        new Plyr(`#player-${playerId}`);
+      }
+    }
+  ).fail(function (xhr, status, error) {
+    showErrorMsg("An error occurred: there was an issue processing your request", chatboxElement, spinner);
+  });
+}
+
+function showErrorMsg(msg, parentElement, spinnerElement) {
+  const errorMsgParagraph = createParagraphWithClass("h5 p-2 me-3 mb-1 text-white rounded-3 bg-danger");
+  errorMsgParagraph.textContent = msg;
+  parentElement.appendChild(errorMsgParagraph);
+  spinnerElement.classList.add("d-none");
+  setTimeout(() => {
+    errorMsgParagraph.remove();
+  }, 4000);
+}
+
+function saveRecentSearchToLocalStorage(songs) {
+  localStorage.setItem("recentSearch", JSON.stringify(songs));
+}
+function playedSongs(song, playerId) {
+  const existingData = localStorage.getItem("playedSongs");
+  let playedSongsList = existingData ? JSON.parse(existingData) : [];
+  const newData = { song: song, playerId: playerId };
+  playedSongsList.push(newData);
+  localStorage.setItem("playedSongs", JSON.stringify(playedSongsList));
+}
+
 document.addEventListener("DOMContentLoaded", function (e) {
-  loadDataFromLocalstorage();
+  const recentSearch = localStorage.getItem("recentSearch");
+  const playedSongs = localStorage.getItem("playedSongs");
+  if (recentSearch) {
+    const songs = JSON.parse(recentSearch);
+    const songListBox = createSongListContainer(songs);
+
+    const parentSongList = document.createElement("div");
+    parentSongList.className = "col-lg-6 mt-3 card my-2";
+    const title = document.createElement("small");
+    title.innerHTML = "You recently searched";
+    title.className = "text-light fw-semibold";
+    appendChildren(parentSongList, [title, songListBox]);
+    chatboxElement.appendChild(parentSongList);
+  }
+  if (playedSongs) {
+    const songs = JSON.parse(playedSongs);
+    songs.forEach((songData, index) => {
+      const { song, playerId } = songData;
+      const musicContainer = createMusicContainer(song, playerId);
+      const parentSongList = document.createElement("div");
+      parentSongList.className = "mt-3 card my-2 py-1 px-1 fit-content";
+      const title = document.createElement("small");
+      title.innerHTML = "You recently played this songs";
+      title.className = "text-light fw-semibold";
+      appendChildren(parentSongList, [title, musicContainer]);
+      chatboxElement.appendChild(parentSongList);
+      new Plyr(`#player-${playerId}`);
+    });
+  } else {
+    const parentSongList = document.createElement("div");
+    parentSongList.className = "col-lg-6 mt-3 card my-2";
+    const title = document.createElement("small");
+    title.innerHTML = "Welcome to eSound";
+    title.className = "text-light fw-semibold";
+    appendChildren(parentSongList, [title]);
+    chatboxElement.appendChild(parentSongList);
+  }
 });
+function downloadHooks(e, url, parentElement) {
+  fetch(url)
+    .then((response) => {
+      const total = parseInt(response.headers.get("content-length"));
+      let downloaded = 0;
+
+      const reader = response.body.getReader();
+
+      const parentDiv = createDivWithClass("progress");
+      const childDiv = createDivWithClass("progress-bar progress-bar-striped progress-bar-animated bg-primary");
+      childDiv.setAttribute("role", "progressbar");
+      parentDiv.appendChild(childDiv);
+      parentElement.appendChild(parentDiv);
+
+      function read() {
+        reader.read().then(({ done, value }) => {
+          if (done) {
+            console.log("Download completed!");
+            setTimeout(() => {
+              childDiv.remove();
+              const textAlert = document.createElement("h6");
+              textAlert.innerHTML = "Download completeted";
+              textAlert.className = "text-light fw-semibold";
+              parentDiv.appendChild(textAlert);
+              setTimeout(() => {
+                parentDiv.remove();
+              }, 2000);
+            }, 2000);
+            return;
+          }
+
+          downloaded += value.length;
+          const progress = (downloaded / total) * 100;
+          updateProgressBar(progress, childDiv);
+
+          read();
+        });
+      }
+
+      read();
+    })
+    .catch((error) => {
+      console.error("Error while downloading the song:", error);
+    });
+}
+
+function updateProgressBar(progress, childDiv) {
+  childDiv.style.width = progress + "%";
+  childDiv.innerHTML = progress;
+}
+
+function toggleTheme() {
+  const themeStyle = document.getElementById("theme-style");
+  const currentTheme = themeStyle.getAttribute("href");
+  const lightTheme = "/static/core-light.css";
+  const darkTheme = "/static/core-dark.css";
+
+  // Switch between themes
+  if (currentTheme === lightTheme) {
+    themeStyle.setAttribute("href", darkTheme);
+    localStorage.setItem("theme", "dark");
+  } else {
+    themeStyle.setAttribute("href", lightTheme);
+    localStorage.setItem("theme", "light");
+  }
+}
+const savedTheme = localStorage.getItem("theme");
+const themeStyle = document.getElementById("theme-style");
+if (savedTheme === "dark") {
+  themeStyle.setAttribute("href", "/static/core-dark.css");
+} else {
+  themeStyle.setAttribute("href", "/static/core-light.css");
+}

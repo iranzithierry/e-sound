@@ -221,7 +221,7 @@ nav {
 .plyr {
     --shadow-color: 197deg 32% 65%;
     border-radius: 12px;
-    box-shadow: 0 .5px .6px hsl(var(--shadow-color)/.36), 0 1.7px 1.9px -.8px hsl(var(--shadow-color)/.36), 0 4.3px 4.8px -1.7px hsl(var(--shadow-color)/.36), -.1px 10.6px 11.9px -2.5px hsl(var(--shadow-color)/.36);
+    
 }
 
 .plyr.plyr--audio {
@@ -428,9 +428,13 @@ nav {
     position: relative;
     transition: all .3s ease
 }
-
+.btn-plyr-theme{
+    color: var(--bs-btn-plyr) !important;
+    display: block;
+    font-size: 18px;
+}
 .plyr__control svg {
-    fill: currentColor;
+    fill: var(--bs-btn-plyr) !important;
     display: block;
     height: 18px;
     height: var(--plyr-control-icon-size, 18px);
@@ -1174,8 +1178,8 @@ a.plyr__control:before {
 }
 
 .plyr--audio .plyr__controls {
-    background: #fff;
-    background: var(--plyr-audio-controls-background, #fff);
+    background-color: var(--bs-card-bg) !important;
+    
     border-radius: inherit;
     color: #4a5464;
     color: var(--plyr-audio-control-color, #4a5464);
