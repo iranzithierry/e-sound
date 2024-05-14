@@ -79,7 +79,8 @@
 
 .chat-box {
   max-height: 600px;
-  height: 455px;
+  height: 465px;
+  padding-bottom: 4em;
 }
 
 .bxs-download {
